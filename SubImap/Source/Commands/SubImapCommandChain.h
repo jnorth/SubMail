@@ -1,4 +1,4 @@
-// SubImap.h
+// SubImapCommandChain.h
 // SubMail
 //
 // Copyright (c) 2012 Joseph North (http://sublink.ca/)
@@ -22,23 +22,16 @@
 // THE SOFTWARE.
 
 #import "SubImapTypes.h"
-
-#import "SubImapConnectionData.h"
-#import "SubImapConnection.h"
 #import "SubImapClient.h"
-#import "SubImapResponse.h"
 
-#import "SubImapCommand.h"
-#import "SubImapCommandChain.h"
-#import "SubImapCapabilityCommand.h"
-#import "SubImapExpungeCommand.h"
-#import "SubImapFetchCommand.h"
-#import "SubImapListCommand.h"
-#import "SubImapLoginCommand.h"
-#import "SubImapLogoutCommand.h"
-#import "SubImapRawCommand.h"
-#import "SubImapSelectCommand.h"
+@interface SubImapCommandChain : NSObject
 
-#import "SubImapToken.h"
-#import "SubImapTokenizer.h"
-#import "SubImapParser.h"
+@property (copy) SubImapCommandChainErrorBlock errorBlock;
+
++ (id)chainWithClient:(SubImapClient *)client;
+
+- (void)addBlock:(SubImapCommandChainBlock)block;
+
+- (void)run;
+
+@end

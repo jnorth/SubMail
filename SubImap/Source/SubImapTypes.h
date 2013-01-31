@@ -30,3 +30,6 @@ typedef enum {
 } SubImapClientState;
 
 typedef void (^SubImapResultBlock)(SubImapCommand *command);
+
+typedef id (^SubImapCommandChainBlock)(id result);
+typedef void (^SubImapCommandChainErrorBlock)(NSError *error);
