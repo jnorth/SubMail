@@ -364,6 +364,7 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
     // Message
     id message = [self parseMessageAttributeData:error];
     if (*error) return nil;
+    message[@"sequenceID"] = number;
     return [SubImapResponse responseWithType:SubImapResponseTypeFetch data:message];
   }
 
