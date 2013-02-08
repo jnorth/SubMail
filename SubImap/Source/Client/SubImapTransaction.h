@@ -1,4 +1,4 @@
-// SubImapCommandChain.h
+// SubImapTransaction.h
 // SubMail
 //
 // Copyright (c) 2012 Joseph North (http://sublink.ca/)
@@ -22,16 +22,20 @@
 // THE SOFTWARE.
 
 #import "SubImapTypes.h"
-#import "SubImapClient.h"
+#import "SubImapCommand.h"
 
-@interface SubImapCommandChain : NSObject
+@class SubImapClient;
 
-@property (copy) SubImapCommandChainErrorBlock errorBlock;
+@interface SubImapTransaction : NSObject
 
-+ (id)chainWithClient:(SubImapClient *)client;
++ (instancetype)transaction;
 
-- (void)addBlock:(SubImapCommandChainBlock)block;
+- (void)addBlock:(SubImapTransactionBlock)block;
 
-- (void)run;
+- (void)addCommand:(SubImapCommand *)command;
+
+- (void)addErrorBlock:(SubImapTransactionErrorBlock)block;
+
+- (void)runWithClient:(SubImapClient *)client;
 
 @end

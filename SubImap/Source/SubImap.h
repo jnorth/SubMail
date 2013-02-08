@@ -23,13 +23,14 @@
 
 #import "SubImapTypes.h"
 
+#import "SubImapResponse.h"
 #import "SubImapConnectionData.h"
 #import "SubImapConnection.h"
 #import "SubImapClient.h"
-#import "SubImapResponse.h"
+#import "SubImapTransaction.h"
+#import "SubImapTransactionalClient.h"
 
 #import "SubImapCommand.h"
-#import "SubImapCommandChain.h"
 #import "SubImapCapabilityCommand.h"
 #import "SubImapExpungeCommand.h"
 #import "SubImapFetchCommand.h"

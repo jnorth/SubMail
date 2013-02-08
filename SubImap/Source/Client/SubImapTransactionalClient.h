@@ -1,4 +1,4 @@
-// SubImapRawCommand.m
+// SubImapTransactionClient.h
 // SubMail
 //
 // Copyright (c) 2012 Joseph North (http://sublink.ca/)
@@ -21,59 +21,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "SubImapRawCommand.h"
+#import "SubImapClient.h"
+#import "SubImapTransaction.h"
 
-#import "SubImapConnectionData.h"
+@interface SubImapTransactionalClient : SubImapClient
 
-@implementation SubImapRawCommand {
-  NSString *_command;
-  NSMutableArray *_responses;
-}
-
-+ (id)commandWithString:(NSString *)string {
-  return [[self alloc] initWithString:string];
-}
-
-- (id)initWithString:(NSString *)string {
-  self = [super self];
-
-  if (self) {
-    if (!string) {
-      [self setErrorCode:7 message:@"Nil string given to raw command."];
-    }
-
-    _command = string;
-  }
-
-  return self;
-}
-
-- (BOOL)canExecuteInState:(SubImapClientState)state {
-  return state != SubImapClientStateDisconnected;
-}
-
-- (NSArray *)render {
-  return @[
-    [SubImapConnectionData dataWithString:self.tag],
-    [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithString:_command],
-    [SubImapConnectionData CRLF],
-  ];
-}
-
-- (BOOL)handleUntaggedResponse:(SubImapResponse *)response {
-  [_responses addObject:response];
-  return YES;
-}
-
-- (BOOL)handleTaggedResponse:(SubImapResponse *)response {
-  if ([response isType:SubImapResponseTypeOk]) {
-    self.result = _responses;
-  } else {
-    [self setErrorCode:7 message:response.data];
-  }
-
-  return YES;
-}
+- (void)enqueueTransaction:(SubImapTransaction *)transaction;
 
 @end

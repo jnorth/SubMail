@@ -24,44 +24,121 @@
 #import "SubImapTypes.h"
 #import "SubImapResponse.h"
 
+/*
+ * SubImapCommand
+ *
+ * This class represents an IMAP command, and handles any related responses.
+ *
+ * Override this to add support for new IMAP commands.
+ */
 @interface SubImapCommand : NSObject
 
 /*
- * IMAP commands are 'tagged' so that we can match
- * responses to their command.
+ * IMAP commands are 'tagged' so that we can match responses to their command.
+ *
+ * This is automatically assigned when added to a SubImapClient.
  */
 @property NSString *tag;
 
+/*
+ * If your command failed in any way, you should set this to indicate what
+ * went wrong. Should be nil if no problems occured.
+ */
 @property NSError *error;
 
+/*
+ * The result of the command. This will be different for each subclass.
+ */
 @property id result;
 
-@property (copy) SubImapResultBlock resultBlock;
+/*
+ * When a command handles it's tagged response, this result block is called.
+ *
+ * At this point, the command is considered complete, either successfully or
+ * unsucessfully. You can now check the error and result properties.
+ */
+- (void)addCompletionBlock:(SubImapCompletionBlock)block;
 
-@property SubImapCommand *nextCommand;
+
+#pragma mark - Override
 
 /*
- * Commands should return the name of the command, as defined
+ * Override this with the name of your command, as defined
  * in the various RFCs. Should be uppercase.
  */
 - (NSString *)name;
 
 /*
- * Some commands can only be executed in certain
- * server states.
+ * Override this to return the valid states for your command.
+ *
+ * Defaults to none.
  */
 - (BOOL)canExecuteInState:(SubImapClientState)state;
 
 /*
- * Returns an array of IMAPConnectionData objects that will be sent
- * to the server.
+ * Override this with your collection of ConnectionData objects that
+ * will be sent to the connection.
+ *
+ * You must include your command's tag, and a terminating CRLF.
  */
 - (NSArray *)render;
 
-- (BOOL)handleResponse:(SubImapResponse *)response;
+/*
+ * Override this to extract any untagged responses that might be related
+ * to your command.
+ *
+ * Return YES if you found it to be related, or NO if not.
+ */
 - (BOOL)handleUntaggedResponse:(SubImapResponse *)response;
+
+/*
+ * Override this to handle your command's tagged response.
+ *
+ * This should only be called when it's tag matches your command's tag.
+ *
+ * Return YES if the response was related, or NO if not. Will probably
+ * always be related as the tags match.
+ */
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response;
 
-- (void)makeError:(NSString *)message;
+/*
+ * Override this to change the client's state.
+ *
+ * Only called after the command has handled it's tagged response.
+ */
+- (SubImapClientState)stateFromState:(SubImapClientState)state;
+
+
+#pragma mark - Helpers
+
+/*
+ * This should not be overridden.
+ *
+ * Calls the other two handlers depending on the response type. It also
+ * calls the resultBlock when the command's tagged response is handled.
+ */
+- (BOOL)handleResponse:(SubImapResponse *)response;
+
+/*
+ * This should not be overridden.
+ *
+ * If something went wrong when handling a response, you should set the
+ * command's error using this method.
+ *
+ * You may still set the command's result if anything useful was extracted.
+ */
+- (void)setErrorCode:(NSInteger)code message:(NSString *)message;
+
+/*
+ * This should not be overridden.
+ *
+ * Calls the completion handlers.
+ *
+ * This is automatically called when YES is returned from your Tagged
+ * response handler, or if an error is set before rendering.
+ *
+ * You should not have to call this.
+ */
+- (void)complete;
 
 @end

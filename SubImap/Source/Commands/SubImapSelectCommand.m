@@ -26,7 +26,7 @@
 #import "SubImapConnectionData.h"
 
 @implementation SubImapSelectCommand {
-  NSString *_mailbox;
+  NSString *_mailboxPath;
 
   NSMutableDictionary *_data;
 }
@@ -43,7 +43,11 @@
   self = [super init];
 
   if (self) {
-    _mailbox = mailbox;
+    if (!mailbox) {
+      [self setErrorCode:8 message:@"Cannot select nil mailbox."];
+    }
+
+    _mailboxPath = mailbox;
     _data = [NSMutableDictionary dictionary];
   }
 
@@ -70,7 +74,7 @@
     [SubImapConnectionData SP],
     [SubImapConnectionData dataWithString:[self name]],
     [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithQuotedString:_mailbox],
+    [SubImapConnectionData dataWithQuotedString:_mailboxPath],
     [SubImapConnectionData CRLF],
   ];
 }
@@ -113,15 +117,23 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self makeError:@"Unable to select mailbox."];
+    [self setErrorCode:8 message:[NSString stringWithFormat:@"Unable to select mailbox (%@).", _mailboxPath]];
   }
 
   _data[@"message"] = response.data[@"message"];
-  _data[@"mailbox"] = _mailbox;
+  _data[@"mailbox"] = _mailboxPath;
 
   self.result = _data;
 
   return YES;
+}
+
+- (SubImapClientState)stateFromState:(SubImapClientState)state {
+  if (state == SubImapClientStateAuthenticated) {
+    return SubImapClientStateSelected;
+  }
+
+  return state;
 }
 
 @end

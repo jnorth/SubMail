@@ -23,7 +23,17 @@
 
 #import "SubImapCommand.h"
 
-@implementation SubImapCommand
+@implementation SubImapCommand {
+  NSMutableArray *_completionBlocks;
+}
+
+- (void)addCompletionBlock:(SubImapCompletionBlock)block {
+  if (!_completionBlocks) {
+    _completionBlocks = [NSMutableArray array];
+  }
+
+  [_completionBlocks addObject:block];
+}
 
 - (NSString *)name {
   return nil;
@@ -38,18 +48,14 @@
 }
 
 - (BOOL)handleResponse:(SubImapResponse *)response {
-  // Result response
+  // Tagged response
   if ([response isResult]) {
     BOOL handled = [self handleTaggedResponse:response];
-
-    if (handled && self.resultBlock) {
-      self.resultBlock(self);
-    }
-
+    if (handled) [self complete];
     return handled;
   }
 
-  // Regular untagged response
+  // Untagged response
   else {
     return [self handleUntaggedResponse:response];
   }
@@ -63,12 +69,22 @@
   return YES;
 }
 
-- (void)makeError:(NSString *)message {
-  NSError *error = [NSError errorWithDomain:@"SubIMAP.IMAPCommand" code:0 userInfo:@{
+- (SubImapClientState)stateFromState:(SubImapClientState)state {
+  return state;
+}
+
+- (void)setErrorCode:(NSInteger)code message:(NSString *)message {
+  NSError *error = [NSError errorWithDomain:@"SubImap.Command" code:code userInfo:@{
     NSLocalizedDescriptionKey:message,
   }];
 
   self.error = error;
+}
+
+- (void)complete {
+  for (SubImapCompletionBlock block in _completionBlocks) {
+    block(self);
+  }
 }
 
 @end

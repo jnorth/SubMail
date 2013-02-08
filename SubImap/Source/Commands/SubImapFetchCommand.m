@@ -48,6 +48,10 @@
   self = [self init];
 
   if (self) {
+    if (IDs && !IDs.count) {
+      [self setErrorCode:3 message:@"Not IDs passed to fetch command."];
+    }
+
     _IDs = IDs;
     _useUIDs = useUIDs;
 
@@ -81,7 +85,7 @@
     [dataList addObject:[SubImapConnectionData SP]];
   }
 
-  [dataList addObject:[SubImapConnectionData dataWithString:[self name]]];
+  [dataList addObject:[SubImapConnectionData dataWithString:self.name]];
   [dataList addObject:[SubImapConnectionData SP]];
 
   if (_IDs) {
@@ -118,9 +122,9 @@
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
     if (response.data[@"message"]) {
-      [self makeError:response.data[@"message"]];
+      [self setErrorCode:3 message:response.data[@"message"]];
     } else {
-      [self makeError:@"Unable to fetch messages."];
+      [self setErrorCode:3 message:@"Unable to fetch messages."];
     }
   }
 

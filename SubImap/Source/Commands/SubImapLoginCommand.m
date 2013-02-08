@@ -38,6 +38,9 @@
   self = [super init];
 
   if (self) {
+    if (!login || !password) {
+      [self setErrorCode:5 message:@"Nil login or password given to login command."];
+    }
     _login = login;
     _password = password;
   }
@@ -57,7 +60,7 @@
   return @[
     [SubImapConnectionData dataWithString:self.tag],
     [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithString:[self name]],
+    [SubImapConnectionData dataWithString:self.name],
     [SubImapConnectionData SP],
     [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding],
     [SubImapConnectionData SP],
@@ -72,12 +75,20 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self makeError:@"Unable to login to account."];
+    [self setErrorCode:5 message:@"Unable to login to account."];
   }
 
   self.result = response.data[@"message"];
 
   return YES;
+}
+
+- (SubImapClientState)stateFromState:(SubImapClientState)state {
+  if (state == SubImapClientStateUnauthenticated) {
+    return SubImapClientStateAuthenticated;
+  }
+
+  return state;
 }
 
 @end

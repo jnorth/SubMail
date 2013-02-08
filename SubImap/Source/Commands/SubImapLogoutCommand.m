@@ -50,7 +50,7 @@
   return @[
     [SubImapConnectionData dataWithString:self.tag],
     [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithString:[self name]],
+    [SubImapConnectionData dataWithString:self.name],
     [SubImapConnectionData CRLF],
   ];
 }
@@ -65,12 +65,20 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self makeError:@"Error logging out."];
+    [self setErrorCode:6 message:@"Error logging out."];
   }
 
   self.result = response.data[@"message"];
 
   return YES;
+}
+
+- (SubImapClientState)stateFromState:(SubImapClientState)state {
+  if (state == SubImapClientStateAuthenticated) {
+    return SubImapClientStateDisconnected;
+  }
+
+  return state;
 }
 
 @end

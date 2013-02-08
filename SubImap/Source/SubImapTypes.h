@@ -20,6 +20,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 @class SubImapCommand;
 
 typedef enum {
@@ -29,7 +30,7 @@ typedef enum {
   SubImapClientStateSelected        = 1 << 3,
 } SubImapClientState;
 
-typedef void (^SubImapResultBlock)(SubImapCommand *command);
+typedef void (^SubImapCompletionBlock)(SubImapCommand *command);
 
-typedef id (^SubImapCommandChainBlock)(id result);
-typedef void (^SubImapCommandChainErrorBlock)(NSError *error);
+typedef id (^SubImapTransactionBlock)(id result);
+typedef void (^SubImapTransactionErrorBlock)(NSError *error);

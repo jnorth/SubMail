@@ -50,7 +50,7 @@
   return @[
     [SubImapConnectionData dataWithString:self.tag],
     [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithString:[self name]],
+    [SubImapConnectionData dataWithString:self.name],
     [SubImapConnectionData CRLF],
   ];
 }
@@ -67,7 +67,7 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (!response.status) {
-    [self makeError:@"Unable to read server capabilities."];
+    [self setErrorCode:1 message:@"Unable to read server capabilities."];
   }
 
   return YES;

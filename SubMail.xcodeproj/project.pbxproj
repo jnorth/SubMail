@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0930CCB116B7E15900F54E3D /* SubMail.h in Headers */ = {isa = PBXBuildFile; fileRef = 0930CCAF16B7E15900F54E3D /* SubMail.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0948D0A316C3DEED00C51B96 /* SubImapTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 0948D0A116C3DEED00C51B96 /* SubImapTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */; };
+		0948D0A716C3E12B00C51B96 /* SubImapTransactionalClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0948D0A516C3E12B00C51B96 /* SubImapTransactionalClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0948D0A816C3E12B00C51B96 /* SubImapTransactionalClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A616C3E12B00C51B96 /* SubImapTransactionalClient.m */; };
 		09AA64FF16B9213500948DD5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0930CC3E16B7DFC100F54E3D /* SenTestingKit.framework */; };
 		09AA650016B9213500948DD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0930CC2816B7DFC000F54E3D /* Cocoa.framework */; };
 		09AA651B16B9216B00948DD5 /* SubImap.h in Headers */ = {isa = PBXBuildFile; fileRef = 09AA651816B9216B00948DD5 /* SubImap.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -49,8 +53,6 @@
 		09AA656916B923F700948DD5 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091F9B0916B8354000BF3186 /* CFNetwork.framework */; };
 		09AA656A16B9240F00948DD5 /* SubImap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AA64E916B9213400948DD5 /* SubImap.framework */; };
 		09AA656B16B9248700948DD5 /* SubImap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AA64E916B9213400948DD5 /* SubImap.framework */; };
-		09D7876816BACA440018342C /* SubImapCommandChain.h in Headers */ = {isa = PBXBuildFile; fileRef = 09D7876616BACA440018342C /* SubImapCommandChain.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		09D7876916BACA440018342C /* SubImapCommandChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 09D7876716BACA440018342C /* SubImapCommandChain.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,10 @@
 		0930CC5816B7E00500F54E3D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0930CC5A16B7E00500F54E3D /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		0930CCAF16B7E15900F54E3D /* SubMail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubMail.h; sourceTree = "<group>"; };
+		0948D0A116C3DEED00C51B96 /* SubImapTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapTransaction.h; sourceTree = "<group>"; };
+		0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapTransaction.m; sourceTree = "<group>"; };
+		0948D0A516C3E12B00C51B96 /* SubImapTransactionalClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapTransactionalClient.h; sourceTree = "<group>"; };
+		0948D0A616C3E12B00C51B96 /* SubImapTransactionalClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapTransactionalClient.m; sourceTree = "<group>"; };
 		09AA64E916B9213400948DD5 /* SubImap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SubImap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09AA64EE16B9213400948DD5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		09AA64FE16B9213500948DD5 /* SubImapTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SubImapTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,8 +122,6 @@
 		09AA656216B9233600948DD5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09AA656416B9233600948DD5 /* SubImapTokenizerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapTokenizerTests.h; sourceTree = "<group>"; };
 		09AA656516B9233600948DD5 /* SubImapTokenizerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapTokenizerTests.m; sourceTree = "<group>"; };
-		09D7876616BACA440018342C /* SubImapCommandChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapCommandChain.h; sourceTree = "<group>"; };
-		09D7876716BACA440018342C /* SubImapCommandChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapCommandChain.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +266,10 @@
 				09AA652216B9221E00948DD5 /* SubImapConnectionData.m */,
 				09AA652316B9221E00948DD5 /* SubImapResponse.h */,
 				09AA652416B9221E00948DD5 /* SubImapResponse.m */,
+				0948D0A116C3DEED00C51B96 /* SubImapTransaction.h */,
+				0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */,
+				0948D0A516C3E12B00C51B96 /* SubImapTransactionalClient.h */,
+				0948D0A616C3E12B00C51B96 /* SubImapTransactionalClient.m */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -269,10 +277,10 @@
 		09AA652516B9221E00948DD5 /* Commands */ = {
 			isa = PBXGroup;
 			children = (
-				09AA652616B9221E00948DD5 /* SubImapCapabilityCommand.h */,
-				09AA652716B9221E00948DD5 /* SubImapCapabilityCommand.m */,
 				09AA652816B9221E00948DD5 /* SubImapCommand.h */,
 				09AA652916B9221E00948DD5 /* SubImapCommand.m */,
+				09AA652616B9221E00948DD5 /* SubImapCapabilityCommand.h */,
+				09AA652716B9221E00948DD5 /* SubImapCapabilityCommand.m */,
 				09AA652A16B9221E00948DD5 /* SubImapExpungeCommand.h */,
 				09AA652B16B9221E00948DD5 /* SubImapExpungeCommand.m */,
 				09AA652C16B9221E00948DD5 /* SubImapFetchCommand.h */,
@@ -287,8 +295,6 @@
 				09AA653516B9221E00948DD5 /* SubImapRawCommand.m */,
 				09AA653616B9221E00948DD5 /* SubImapSelectCommand.h */,
 				09AA653716B9221E00948DD5 /* SubImapSelectCommand.m */,
-				09D7876616BACA440018342C /* SubImapCommandChain.h */,
-				09D7876716BACA440018342C /* SubImapCommandChain.m */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -352,10 +358,11 @@
 				09AA655416B9221E00948DD5 /* SubImapLogoutCommand.h in Headers */,
 				09AA655616B9221E00948DD5 /* SubImapRawCommand.h in Headers */,
 				09AA655816B9221E00948DD5 /* SubImapSelectCommand.h in Headers */,
-				09D7876816BACA440018342C /* SubImapCommandChain.h in Headers */,
 				09AA655A16B9221E00948DD5 /* SubImapParser.h in Headers */,
 				09AA655C16B9221E00948DD5 /* SubImapToken.h in Headers */,
 				09AA655E16B9221E00948DD5 /* SubImapTokenizer.h in Headers */,
+				0948D0A316C3DEED00C51B96 /* SubImapTransaction.h in Headers */,
+				0948D0A716C3E12B00C51B96 /* SubImapTransactionalClient.h in Headers */,
 				09AA656016B9221E00948DD5 /* SubImapTypes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,7 +521,8 @@
 				09AA655B16B9221E00948DD5 /* SubImapParser.m in Sources */,
 				09AA655D16B9221E00948DD5 /* SubImapToken.m in Sources */,
 				09AA655F16B9221E00948DD5 /* SubImapTokenizer.m in Sources */,
-				09D7876916BACA440018342C /* SubImapCommandChain.m in Sources */,
+				0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */,
+				0948D0A816C3E12B00C51B96 /* SubImapTransactionalClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,7 +37,6 @@
 - (void)client:(SubImapClient *)client didSendData:(NSData *)data;
 - (void)client:(SubImapClient *)client didReceiveData:(NSData *)data;
 - (void)client:(SubImapClient *)client didChangeState:(SubImapClientState)state;
-- (void)client:(SubImapClient *)client didSelectMailbox:(NSString *)mailbox;
 - (void)client:(SubImapClient *)client didEncounterParserError:(NSError *)error;
 - (void)client:(SubImapClient *)client didEncounterStreamError:(NSError *)error;
 @end
@@ -48,13 +47,11 @@
 @property (nonatomic) SubImapClientState state;
 @property id<SubImapClientDelegate> delegate;
 
-+ (id)clientWithConnection:(SubImapConnection *)connection;
++ (instancetype)clientWithConnection:(SubImapConnection *)connection;
 - (id)initWithConnection:(SubImapConnection *)connection;
 
 - (SubImapConnection *)connection;
 
-- (void)sendCommand:(SubImapCommand *)command;
-
-- (BOOL)hasCapability:(NSString *)capability;
+- (void)enqueueCommand:(SubImapCommand *)command;
 
 @end

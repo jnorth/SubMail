@@ -51,6 +51,10 @@
   self = [self init];
 
   if (self) {
+    if (!reference || !mailbox) {
+      [self setErrorCode:4 message:@"List command given nil reference or mailbox."];
+    }
+
     _reference = reference;
     _mailbox = mailbox;
 
@@ -97,7 +101,7 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self makeError:response.data[@"message"]];
+    [self setErrorCode:4 message:response.data[@"message"]];
   }
 
   self.result = _responses;

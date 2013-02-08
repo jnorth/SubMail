@@ -55,7 +55,7 @@
   return @[
     [SubImapConnectionData dataWithString:self.tag],
     [SubImapConnectionData SP],
-    [SubImapConnectionData dataWithString:[self name]],
+    [SubImapConnectionData dataWithString:self.name],
     [SubImapConnectionData CRLF],
   ];
 }
@@ -71,7 +71,7 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self makeError:response.data[@"message"]];
+    [self setErrorCode:2 message:response.data[@"message"]];
   }
 
   self.result = _responses;
