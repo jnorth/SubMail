@@ -38,9 +38,10 @@
   self = [super init];
 
   if (self) {
-    if (!login || !password) {
+    if (!login || !password || !login.length || !password.length) {
       [self setErrorCode:5 message:@"Nil login or password given to login command."];
     }
+
     _login = login;
     _password = password;
   }
@@ -57,14 +58,23 @@
 }
 
 - (NSArray *)render {
+  // Only use literals when absolutely necessary
+  SubImapConnectionData *loginData = [self stringNeedsLiteral:_login]
+    ? [SubImapConnectionData dataWithString:_login]
+    : [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding];
+
+  SubImapConnectionData *passwordData = [self stringNeedsLiteral:_login]
+    ? [SubImapConnectionData dataWithString:_password]
+    : [SubImapConnectionData literalDataWithString:_password encoding:NSUTF8StringEncoding];
+
   return @[
     [SubImapConnectionData dataWithString:self.tag],
     [SubImapConnectionData SP],
     [SubImapConnectionData dataWithString:self.name],
     [SubImapConnectionData SP],
-    [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding],
+    loginData,
     [SubImapConnectionData SP],
-    [SubImapConnectionData literalDataWithString:_password encoding:NSUTF8StringEncoding],
+    passwordData,
     [SubImapConnectionData CRLF],
   ];
 }
@@ -89,6 +99,19 @@
   }
 
   return state;
+}
+
+// Only 'astring's should be sent as non-literals
+- (BOOL)stringNeedsLiteral:(NSString *)string {
+  // ASCII
+  NSMutableCharacterSet *validCharacters = [NSCharacterSet characterSetWithRange:NSMakeRange(0, 127)];
+  // Remove control characters
+  [validCharacters removeCharactersInRange:NSMakeRange(0, 31)];
+  [validCharacters removeCharactersInRange:NSMakeRange(127, 1)];
+  // Remove atom specials, except ]
+  [validCharacters removeCharactersInString:@"(){ %*\""];
+
+  return [string rangeOfCharacterFromSet:[validCharacters invertedSet]].location == NSNotFound;
 }
 
 @end
