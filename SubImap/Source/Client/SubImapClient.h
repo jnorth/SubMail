@@ -53,5 +53,6 @@
 - (SubImapConnection *)connection;
 
 - (void)enqueueCommand:(SubImapCommand *)command;
+- (void)dequeueAllCommands;
 
 @end

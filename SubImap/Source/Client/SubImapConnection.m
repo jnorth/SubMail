@@ -66,8 +66,10 @@
 }
 
 #pragma mark -
+#pragma mark Connection
 
-- (void)setup {
+- (BOOL)open {
+  // Reset associated variables
   _didOpen = NO;
 
   _readStream = nil;
@@ -81,14 +83,6 @@
   _dataQueue = [NSMutableArray array];
   _activeLiteralData = nil;
   _canWriteLiteralData = NO;
-}
-
-#pragma mark Connection
-
-- (BOOL)open {
-  [self setup];
-
-  BOOL success = NO;
 
   // Create sockets
   CFReadStreamRef cfInputStream = NULL;
@@ -132,15 +126,14 @@
     [_writeStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [_writeStream open];
 
-    success = YES;
+    return YES;
   }
 
   // Error creating sockets
   else {
     [self close];
+    return NO;
   }
-
-  return success;
 }
 
 - (BOOL)close {
@@ -497,7 +490,7 @@
   }
 }
 
-#pragma mark Dealloc
+#pragma mark -
 
 - (void)dealloc {
   if ([self isOpen]) {

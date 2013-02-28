@@ -45,6 +45,12 @@
   [self processTransactionQueue];
 }
 
+- (void)dequeueAllCommands {
+  [_transactionQueue removeAllObjects];
+  _activeTransaction = nil;
+  [super dequeueAllCommands];
+}
+
 #pragma mark -
 
 - (void)processTransactionQueue {

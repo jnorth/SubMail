@@ -75,6 +75,12 @@
   [self processCommandQueue];
 }
 
+- (void)dequeueAllCommands {
+  _activeCommand = nil;
+  [_commandQueue removeAllObjects];
+  _commandNumber = 0;
+}
+
 #pragma mark -
 #pragma mark Commands & Responses
 
