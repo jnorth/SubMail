@@ -1221,10 +1221,9 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
   if (*error) return nil;
 
   // Section spec
-  // TODO: Proper sections
-  token = [self.tokenizer pullTokenOfType:SubImapTokenTypeAtom error:error];
+  NSString *spec = [self parseMessageBodySectionSpecData:error];
   if (*error) return nil;
-  data[@"section"] = token.value;
+  data[@"section"] = spec;
 
   // ]
   token = [self.tokenizer pullTokenOfType:SubImapTokenTypeBracketClose error:error];
@@ -1242,6 +1241,20 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
   data[@"data"] = nstring;
 
   return data;
+}
+
+// TODO: proper section specs
+- (id)parseMessageBodySectionSpecData:(NSError **)error {
+  // ]
+  if ([self.tokenizer peekTokenIsType:SubImapTokenTypeBracketClose]) {
+    return @"";
+  }
+
+  // Atom
+  SubImapToken *token;
+  token = [self.tokenizer pullTokenOfType:SubImapTokenTypeAtom error:error];
+  if (*error) return nil;
+  return token.value;
 }
 
 /*
