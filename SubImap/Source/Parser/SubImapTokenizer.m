@@ -526,6 +526,15 @@
   // Read bytes into string
   NSString *value = [[NSString alloc] initWithData:literal encoding:NSUTF8StringEncoding];
 
+  // TODO: The tokenizer shouldn't try to decode data
+  if (!value) {
+    value = [[NSString alloc] initWithData:literal encoding:NSASCIIStringEncoding];
+
+    if (!value) {
+      value = @"(decoding error)";
+    }
+  }
+
   return [SubImapToken token:SubImapTokenTypeLiteral value:value position:pos];
 }
 
