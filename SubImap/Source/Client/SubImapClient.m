@@ -138,6 +138,7 @@
     if ([_activeCommand.name isEqualToString:@"IDLE"]) {
       [_activeCommand complete];
       _activeCommand = nil;
+      [self processCommandQueue];
     }
 
     return;
