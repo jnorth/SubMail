@@ -735,6 +735,7 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
 //    @"BODY.PEEK",
 //    @"BODYSTRUCTURE",
     @"X-GM-MSGID",
+    @"X-GM-THRID",
     @"X-GM-LABELS",
   ];
 
@@ -806,6 +807,14 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
       token = [self.tokenizer pullTokenOfType:SubImapTokenTypeNumber error:error];
       if (*error) return nil;
       data[@"x-gm-msgid"] = token.value;
+    }
+
+    // X-GM-THRID -- Gimap extension
+    // https://developers.google.com/google-apps/gmail/imap_extensions
+    else if ([attribute isEqualToString:@"X-GM-THRID"]) {
+      token = [self.tokenizer pullTokenOfType:SubImapTokenTypeNumber error:error];
+      if (*error) return nil;
+      data[@"x-gm-thrid"] = token.value;
     }
 
     // X-GM-LABELS -- Gimap extension
