@@ -387,16 +387,16 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
   // Response code
   NSMutableDictionary *code = [self parseTextCodeData:error];
   if (*error) return nil;
+  if (code) data = code;
 
-  if (code) {
-    data = code;
+  // SP
+  if ([self.tokenizer pullTokenIsType:SubImapTokenTypeSpace]) {
+    // Response text
+    token = [self.tokenizer pullTokenOfType:SubImapTokenTypeText error:error];
+    if (*error) return nil;
+
+    data[@"message"] = token.value;
   }
-
-  // Response text
-  token = [self.tokenizer pullTokenOfType:SubImapTokenTypeText error:error];
-  if (*error) return nil;
-
-  data[@"message"] = token.value;
 
   return data;
 }
@@ -512,10 +512,6 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
 
   // ]
   token = [self.tokenizer pullTokenOfType:SubImapTokenTypeBracketClose error:error];
-  if (*error) return nil;
-
-  // SP
-  token = [self.tokenizer pullTokenOfType:SubImapTokenTypeSpace error:error];
   if (*error) return nil;
 
   return data;
