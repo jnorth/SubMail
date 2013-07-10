@@ -1,4 +1,4 @@
-// SIIMAPTokenizerTests.h
+// SubIMAPTokenizerTests.h
 // SubMail
 //
 // Copyright (c) 2012 Joseph North (http://sublink.ca/)
