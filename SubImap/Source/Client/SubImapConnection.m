@@ -23,15 +23,13 @@
 
 #import "SubImapConnection.h"
 
-#import "SubImapParser.h"
-
 @implementation SubImapConnection {
   NSString *_host;
-  SubImapParser *_parser;
 
-  BOOL _didOpen;
+  NSMutableArray *_delegates;
 
   // Streams
+  BOOL _didOpen;
   NSInputStream *_readStream;
   NSOutputStream *_writeStream;
   BOOL _writeStreamHasSpace;
@@ -56,7 +54,8 @@
 
   if (self) {
     _host = host;
-    _parser = [SubImapParser parser];
+
+    _delegates = [NSMutableArray array];
 
     self.supportLiteralPlus = NO;
     self.readBufferSize = 1024;
@@ -65,7 +64,23 @@
   return self;
 }
 
+- (void)dealloc {
+  if ([self isOpen]) {
+    [self close];
+  }
+}
+
 #pragma mark -
+#pragma mark Delegates
+
+- (void)addDelegate:(id<SubImapConnectionDelegate>)delegate {
+  [_delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id<SubImapConnectionDelegate>)delegate {
+  [_delegates removeObject:delegate];
+}
+
 #pragma mark Connection
 
 - (BOOL)open {
@@ -144,8 +159,10 @@
   [_writeStream close];
 
   // Delegate: DidClose
-  if (self.delegate && [self.delegate respondsToSelector:@selector(connectionDidClose:)]) {
-    [self.delegate performSelector:@selector(connectionDidClose:) withObject:self];
+  for (id<SubImapConnectionDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(connectionDidClose:)]) {
+      [delegate connectionDidClose:self];
+    }
   }
 
   return
@@ -214,9 +231,12 @@
 
     case NSStreamEventErrorOccurred:{
       // Delegate: DidEncounterStreamError
-      if (self.delegate && [self.delegate respondsToSelector:@selector(connection:didEncounterStreamError:)]) {
-        [self.delegate performSelector:@selector(connection:didEncounterStreamError:) withObject:self withObject:[stream streamError]];
+      for (id<SubImapConnectionDelegate>delegate in _delegates) {
+        if ([delegate respondsToSelector:@selector(connection:didEncounterStreamError:)]) {
+          [delegate connection:self didEncounterStreamError:stream.streamError];
+        }
       }
+
       break;
     }
 
@@ -229,8 +249,10 @@
   if (!_didOpen && [self isOpen]) {
     _didOpen = YES;
 
-    if (self.delegate && [self.delegate respondsToSelector:@selector(connectionDidOpen:)]) {
-      [self.delegate performSelector:@selector(connectionDidOpen:) withObject:self];
+    for (id<SubImapConnectionDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(connectionDidOpen:)]) {
+        [delegate connectionDidOpen:self];
+      }
     }
   }
 }
@@ -305,16 +327,20 @@
     }
 
     // Delegate: DidSendData
-    if (delegateData && self.delegate && [self.delegate respondsToSelector:@selector(connection:didSendData:)]) {
-      [self.delegate performSelector:@selector(connection:didSendData:) withObject:self withObject:delegateData];
+    for (id<SubImapConnectionDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(connection:didSendData:)]) {
+        [delegate connection:self didSendData:delegateData];
+      }
     }
   }
 
   // The write stream is ready, but we don't have any data to write
   else {
     // Delegate: HasSpace
-    if (self.delegate && [self.delegate respondsToSelector:@selector(connectionHasSpace:)]) {
-      [self.delegate performSelector:@selector(connectionHasSpace:) withObject:self];
+    for (id<SubImapConnectionDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(connectionHasSpace:)]) {
+        [delegate connectionHasSpace:self];
+      }
     }
   }
 }
@@ -330,9 +356,16 @@
   }
 
   // Delegate: DidReceiveData
-  if (self.delegate && [self.delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
-    NSData *data = [NSData dataWithBytes:buffer length:bytesRead];
-    [self.delegate performSelector:@selector(connection:didReceiveData:) withObject:self withObject:data];
+  NSData *delegateData;
+
+  for (id<SubImapConnectionDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
+      if (!delegateData) {
+        delegateData = [NSData dataWithBytes:buffer length:bytesRead];
+      }
+
+      [delegate connection:self didReceiveData:delegateData];
+    }
   }
 
   // Add bytes to buffer
@@ -466,35 +499,18 @@
 }
 
 - (void)handleResponseData:(NSData *)data {
-  // Parse response data
-  NSError *error;
-  SubImapResponse *response = [_parser parseResponseData:data error:&error];
-
-  if (error) {
-    // Delegate: DidEncounterParserError
-    if (self.delegate && [self.delegate respondsToSelector:@selector(connection:didEncounterParserError:)]) {
-      [self.delegate performSelector:@selector(connection:didEncounterParserError:) withObject:self withObject:error];
+  // Delegate: DidReceiveResponseData
+  for (id<SubImapConnectionDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(connection:didReceiveResponseData:)]) {
+      [delegate connection:self didReceiveResponseData:data];
     }
-    return;
   }
 
-  // Delegate: DidReceiveResponse
-  if (self.delegate && [self.delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
-    [self.delegate performSelector:@selector(connection:didReceiveResponse:) withObject:self withObject:response];
-  }
-
-  // Literal
-  if ([response isContinuation] && _activeLiteralData) {
+  // Write queued literal data if this is a continuation response
+  const char *bytes = [data bytes];
+  if (bytes != nil && bytes[0] == '+' && _activeLiteralData) {
     _canWriteLiteralData = YES;
     [self streamWrite];
-  }
-}
-
-#pragma mark -
-
-- (void)dealloc {
-  if ([self isOpen]) {
-    [self close];
   }
 }
 

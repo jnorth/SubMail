@@ -25,7 +25,9 @@
 
 #import "SubImapResponse.h"
 #import "SubImapConnectionData.h"
+#import "SubImapConnectionDelegate.h"
 #import "SubImapConnection.h"
+#import "SubImapClientDelegate.h"
 #import "SubImapClient.h"
 #import "SubImapTransaction.h"
 #import "SubImapTransactionalClient.h"

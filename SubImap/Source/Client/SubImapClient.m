@@ -31,10 +31,16 @@
   SubImapConnection *_connection;
   BOOL _connectionHasSpace;
 
+  // Delegates
+  NSMutableArray *_delegates;
+
   // Command queue
   NSMutableArray *_commandQueue;
   SubImapCommand *_activeCommand;
   NSUInteger _commandNumber;
+
+  // Parser
+  SubImapParser *_parser;
 }
 
 + (instancetype)clientWithConnection:(SubImapConnection *)connection {
@@ -46,17 +52,25 @@
 
   if (self) {
     _connection = connection;
-    _connection.delegate = self;
     _connectionHasSpace = NO;
+    [_connection addDelegate:self];
+
+    _delegates = [NSMutableArray array];
 
     _commandQueue = [NSMutableArray array];
     _activeCommand = nil;
     _commandNumber = 0;
 
+    _parser = [SubImapParser parser];
+
     self.state = SubImapClientStateDisconnected;
   }
 
   return self;
+}
+
+- (void)dealloc {
+  [_connection removeDelegate:self];
 }
 
 #pragma mark -
@@ -70,18 +84,70 @@
   NSString *tag = [self generateTag];
   command.tag = tag;
 
-  // Add command to queue, and process
+  // Add command to queue
   [_commandQueue addObject:command];
+
+  // Delegate: didEnqueueCommand
+  for (id<SubImapClientDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(client:didEnqueueCommand:)]) {
+      [delegate client:self didEnqueueCommand:command];
+    }
+  }
+
+  // Process queue
   [self processCommandQueue];
 }
 
 - (void)dequeueAllCommands {
+  // Delegate: DidDequeueCommand
+  for (SubImapCommand *command in _commandQueue) {
+    for (id<SubImapClientDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(client:didDequeueCommand:)]) {
+        [delegate client:self didDequeueCommand:command];
+      }
+    }
+  }
+
   _activeCommand = nil;
   [_commandQueue removeAllObjects];
   _commandNumber = 0;
 }
 
+#pragma mark Delegates
+
+- (void)addDelegate:(id<SubImapClientDelegate>)delegate {
+  [_delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id<SubImapClientDelegate>)delegate {
+  [_delegates removeObject:delegate];
+}
+
 #pragma mark -
+
+- (NSString *)generateTag {
+  return [NSString stringWithFormat:@"#%lu", _commandNumber++];
+}
+
+- (void)setState:(SubImapClientState)state {
+  if (state == _state) {
+    return;
+  }
+
+  _state = state;
+
+  // Delegate: DidChangeState
+  for (id<SubImapClientDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(client:didChangeState:)]) {
+      [delegate client:self didChangeState:_state];
+    }
+  }
+
+  // If a command wasn't able to be executed before
+  // it might be able to now
+  [self processCommandQueue];
+}
+
 #pragma mark Commands & Responses
 
 - (void)processCommandQueue {
@@ -108,8 +174,10 @@
   }
 
   // Delegate: DidSendCommand
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didSendCommand:)]) {
-    [self.delegate performSelector:@selector(client:didSendCommand:) withObject:self withObject:command];
+  for (id<SubImapClientDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(client:didSendCommand:)]) {
+      [delegate client:self didSendCommand:command];
+    }
   }
 }
 
@@ -155,30 +223,18 @@
       [self processCommandQueue];
     }
   }
-
-  return;
 }
 
-#pragma mark IMAPConnectionDelegate
+#pragma mark SubImapConnectionDelegate
 
 - (void)connectionDidOpen:(SubImapConnection *)connection {
   self.state = SubImapClientStateUnauthenticated;
-
-  // Delegate: DidConnect
-  if (self.delegate && [self.delegate respondsToSelector:@selector(clientDidConnect:)]) {
-    [self.delegate performSelector:@selector(clientDidConnect:) withObject:self];
-  }
 }
 
 - (void)connectionDidClose:(SubImapConnection *)connection {
   self.state = SubImapClientStateDisconnected;
   _commandNumber = 0;
   _activeCommand = nil;
-
-  // Delegate: DidDisconnect
-  if (self.delegate && [self.delegate respondsToSelector:@selector(clientDidDisconnect:)]) {
-    [self.delegate performSelector:@selector(clientDidDisconnect:) withObject:self];
-  }
 }
 
 - (void)connectionHasSpace:(SubImapConnection *)connection {
@@ -186,71 +242,30 @@
   [self processCommandQueue];
 }
 
-- (void)connection:(SubImapConnection *)connection didSendData:(NSData *)data {
-  // Delegate: DidSendData
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didSendData:)]) {
-    [self.delegate performSelector:@selector(client:didSendData:) withObject:self withObject:data];
-  }
-}
+- (void)connection:(SubImapConnection *)connection didReceiveResponseData:(NSData *)data {
+  NSError *error;
+  SubImapResponse *response = [_parser parseResponseData:data error:&error];
 
-- (void)connection:(SubImapConnection *)connection didReceiveData:(NSData *)data {
-  // Delegate: DidReceiveData
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didReceiveData:)]) {
-    [self.delegate performSelector:@selector(client:didReceiveData:) withObject:self withObject:data];
-  }
-}
-
-- (void)connection:(SubImapConnection *)connection didReceiveResponse:(SubImapResponse *)response {
-  // Delegate: DidReceiveResponse
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didReceiveResponse:)]) {
-    [self.delegate performSelector:@selector(client:didReceiveResponse:) withObject:self withObject:response];
+  if (error) {
+    // Delegate: DidEncounterParserError
+    for (id<SubImapClientDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(client:didEncounterParserError:)]) {
+        [delegate client:self didEncounterParserError:error];
+      }
+    }
   }
 
-  // Process response
-  [self processResponse:response];
-}
+  else {
+    // Delegate: DidReceiveResponse
+    for (id<SubImapClientDelegate>delegate in _delegates) {
+      if ([delegate respondsToSelector:@selector(client:didReceiveResponse:)]) {
+        [delegate client:self didReceiveResponse:response];
+      }
+    }
 
-- (void)connection:(SubImapConnection *)connection didEncounterParserError:(NSError *)error {
-  // Delegate: DidEncounterParserError
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didEncounterParserError:)]) {
-    [self.delegate performSelector:@selector(client:didEncounterParserError:) withObject:self withObject:error];
+    // Process response
+    [self processResponse:response];
   }
-}
-
-- (void)connection:(SubImapConnection *)connection didEncounterStreamError:(NSError *)error {
-  // Delegate: DidEncounterStreamError
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didEncounterStreamError:)]) {
-    [self.delegate performSelector:@selector(client:didEncounterStreamError:) withObject:self withObject:error];
-  }
-}
-
-#pragma mark Helpers
-
-- (NSString *)generateTag {
-  return [NSString stringWithFormat:@"#%lu", _commandNumber++];
-}
-
-- (void)setState:(SubImapClientState)state {
-  if (state == _state) {
-    return;
-  }
-
-  _state = state;
-
-  // Delegate: DidChangeState
-  if (self.delegate && [self.delegate respondsToSelector:@selector(client:didChangeState:)]) {
-    [self.delegate client:self didChangeState:_state];
-  }
-
-  // If a command wasn't able to be executed before
-  // it might be able to now
-  [self processCommandQueue];
-}
-
-#pragma mark -
-
-- (void)dealloc {
-  _connection.delegate = nil;
 }
 
 @end

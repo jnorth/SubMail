@@ -23,25 +23,13 @@
 
 #import "SubImapConnectionData.h"
 #import "SubImapResponse.h"
-
-@class SubImapConnection;
-
-
-@protocol SubImapConnectionDelegate <NSObject>
-@optional
-- (void)connectionDidOpen:(SubImapConnection *)connection;
-- (void)connectionDidClose:(SubImapConnection *)connection;
-- (void)connectionHasSpace:(SubImapConnection *)connection;
-- (void)connection:(SubImapConnection *)connection didSendData:(NSData *)data;
-- (void)connection:(SubImapConnection *)connection didReceiveData:(NSData *)data;
-- (void)connection:(SubImapConnection *)connection didReceiveResponse:(SubImapResponse *)response;
-- (void)connection:(SubImapConnection *)connection didEncounterParserError:(NSError *)error;
-- (void)connection:(SubImapConnection *)connection didEncounterStreamError:(NSError *)error;
-@end
-
+#import "SubImapConnectionDelegate.h"
 
 @interface SubImapConnection : NSObject <NSStreamDelegate>
 
+/*
+ * Number of bytes to read from the stream at a time.
+ */
 @property NSUInteger readBufferSize;
 
 /*
@@ -50,14 +38,19 @@
  */
 @property BOOL supportLiteralPlus;
 
-@property id<SubImapConnectionDelegate> delegate;
-
-+ (id)connectionWithHost:(NSString *)host;
-
 /*
  * Host can be the server's hostname or ip address.
  */
++ (id)connectionWithHost:(NSString *)host;
 - (id)initWithHost:(NSString *)host;
+
+#pragma mark Delegates
+
+- (void)addDelegate:(id<SubImapConnectionDelegate>)delegate;
+
+- (void)removeDelegate:(id<SubImapConnectionDelegate>)delegate;
+
+#pragma mark Connection
 
 /*
  * Open input and output streams to the supplied host, attempting

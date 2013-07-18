@@ -25,32 +25,27 @@
 #import "SubImapConnectionData.h"
 #import "SubImapCommand.h"
 #import "SubImapResponse.h"
-
-@class SubImapClient;
-
-@protocol SubImapClientDelegate <NSObject>
-@optional
-- (void)clientDidConnect:(SubImapClient *)client;
-- (void)clientDidDisconnect:(SubImapClient *)client;
-- (void)client:(SubImapClient *)client didSendCommand:(SubImapCommand *)command;
-- (void)client:(SubImapClient *)client didReceiveResponse:(SubImapResponse *)response;
-- (void)client:(SubImapClient *)client didSendData:(NSData *)data;
-- (void)client:(SubImapClient *)client didReceiveData:(NSData *)data;
-- (void)client:(SubImapClient *)client didChangeState:(SubImapClientState)state;
-- (void)client:(SubImapClient *)client didEncounterParserError:(NSError *)error;
-- (void)client:(SubImapClient *)client didEncounterStreamError:(NSError *)error;
-@end
+#import "SubImapClientDelegate.h"
 
 
 @interface SubImapClient : NSObject <SubImapConnectionDelegate>
 
 @property (nonatomic) SubImapClientState state;
-@property id<SubImapClientDelegate> delegate;
 
 + (instancetype)clientWithConnection:(SubImapConnection *)connection;
 - (id)initWithConnection:(SubImapConnection *)connection;
 
-- (SubImapConnection *)connection;
+#pragma mark Delegates
+
+- (void)addDelegate:(id<SubImapClientDelegate>)delegate;
+
+- (void)removeDelegate:(id<SubImapClientDelegate>)delegate;
+
+#pragma mark Connection
+
+@property (readonly) SubImapConnection *connection;
+
+#pragma mark Commands
 
 - (void)enqueueCommand:(SubImapCommand *)command;
 - (void)dequeueAllCommands;

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		090C61E81796AFB900AAC344 /* SubImapConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 090C61E61796A30F00AAC344 /* SubImapConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		090C61E91796AFC200AAC344 /* SubImapClientDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 090C61E71796A83900AAC344 /* SubImapClientDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0930CCB116B7E15900F54E3D /* SubMail.h in Headers */ = {isa = PBXBuildFile; fileRef = 0930CCAF16B7E15900F54E3D /* SubMail.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0948D0A316C3DEED00C51B96 /* SubImapTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 0948D0A116C3DEED00C51B96 /* SubImapTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */; };
@@ -67,6 +69,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		090C61E61796A30F00AAC344 /* SubImapConnectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubImapConnectionDelegate.h; sourceTree = "<group>"; };
+		090C61E71796A83900AAC344 /* SubImapClientDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubImapClientDelegate.h; sourceTree = "<group>"; };
 		091F9B0916B8354000BF3186 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		0930CC2516B7DFC000F54E3D /* SubMail.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SubMail.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0930CC2816B7DFC000F54E3D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -263,8 +267,10 @@
 			children = (
 				09AA651D16B9221E00948DD5 /* SubImapClient.h */,
 				09AA651E16B9221E00948DD5 /* SubImapClient.m */,
+				090C61E71796A83900AAC344 /* SubImapClientDelegate.h */,
 				09AA651F16B9221E00948DD5 /* SubImapConnection.h */,
 				09AA652016B9221E00948DD5 /* SubImapConnection.m */,
+				090C61E61796A30F00AAC344 /* SubImapConnectionDelegate.h */,
 				09AA652116B9221E00948DD5 /* SubImapConnectionData.h */,
 				09AA652216B9221E00948DD5 /* SubImapConnectionData.m */,
 				09AA652316B9221E00948DD5 /* SubImapResponse.h */,
@@ -369,6 +375,8 @@
 				0948D0A316C3DEED00C51B96 /* SubImapTransaction.h in Headers */,
 				0948D0A716C3E12B00C51B96 /* SubImapTransactionalClient.h in Headers */,
 				09AA656016B9221E00948DD5 /* SubImapTypes.h in Headers */,
+				090C61E81796AFB900AAC344 /* SubImapConnectionDelegate.h in Headers */,
+				090C61E91796AFC200AAC344 /* SubImapClientDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
