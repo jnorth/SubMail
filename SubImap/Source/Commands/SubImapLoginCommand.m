@@ -60,12 +60,12 @@
 - (NSArray *)render {
   // Only use literals when absolutely necessary
   SubImapConnectionData *loginData = [self stringNeedsLiteral:_login]
-    ? [SubImapConnectionData dataWithString:_login]
-    : [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding];
+    ? [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding]
+    : [SubImapConnectionData dataWithString:_login];
 
   SubImapConnectionData *passwordData = [self stringNeedsLiteral:_login]
-    ? [SubImapConnectionData dataWithString:_password]
-    : [SubImapConnectionData literalDataWithString:_password encoding:NSUTF8StringEncoding];
+    ? [SubImapConnectionData literalDataWithString:_password encoding:NSUTF8StringEncoding]
+    : [SubImapConnectionData dataWithString:_password];
 
   return @[
     [SubImapConnectionData dataWithString:self.tag],
@@ -111,7 +111,7 @@
   // Remove atom specials, except ]
   [validCharacters removeCharactersInString:@"(){ %*\""];
 
-  return [string rangeOfCharacterFromSet:[validCharacters invertedSet]].location == NSNotFound;
+  return [string rangeOfCharacterFromSet:[validCharacters invertedSet]].location != NSNotFound;
 }
 
 @end
