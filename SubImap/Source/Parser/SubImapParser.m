@@ -170,10 +170,6 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
   SubImapToken *commandToken = token = [self.tokenizer pullTokenOfType:SubImapTokenTypeAtom error:error];
   if (*error) return nil;
 
-  // SP
-  token = [self.tokenizer pullTokenOfType:SubImapTokenTypeSpace error:error];
-  if (*error) return nil;
-
   // resp-text
   id data = [self parseTextData:error];
   if (*error) return nil;
@@ -383,19 +379,35 @@ NSString *const SubImapParserErrorDomain = @"Parser.SubMail.sublink.ca";
 - (id)parseTextData:(NSError **)error {
   SubImapToken *token;
   NSMutableDictionary *data = [NSMutableDictionary dictionary];
+  BOOL hasText = NO;
+
+  // SP
+  if (![self.tokenizer pullTokenIsType:SubImapTokenTypeSpace]) {
+    return data;
+  }
 
   // Response code
   NSMutableDictionary *code = [self parseTextCodeData:error];
   if (*error) return nil;
-  if (code) data = code;
 
-  // SP
-  if ([self.tokenizer pullTokenIsType:SubImapTokenTypeSpace]) {
+  if (code) {
+    data = code;
+
+    // SP
+    if ([self.tokenizer peekTokenIsType:SubImapTokenTypeSpace]) {
+      token = [self.tokenizer pullTokenOfType:SubImapTokenTypeSpace error:error];
+      if (*error) return nil;
+      hasText = YES;
+    }
+  } else {
+    hasText = YES;
+  }
+
+  if (hasText) {
     // Response text
     token = [self.tokenizer pullTokenOfType:SubImapTokenTypeText error:error];
     if (*error) return nil;
-
-    data[@"message"] = token.value;
+    if (token.value) data[@"message"] = token.value;
   }
 
   return data;

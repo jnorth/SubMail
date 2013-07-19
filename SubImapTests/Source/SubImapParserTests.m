@@ -46,4 +46,42 @@
   STAssertTrue([code[@"highestmodseq"] isEqualToString:@"58744"], @"Incorrect code parameter '%@'.", code[@"highestmodseq"]);
 }
 
+- (void)testOKResponseWithoutText {
+  NSString *testString = @"#1635 OK\r\n";
+  NSData *testData = [testString dataUsingEncoding:NSASCIIStringEncoding];
+
+  SubImapTokenizer *tokenizer = [SubImapTokenizer tokenizer];
+  SubImapParser *parser = [SubImapParser parserWithTokenizer:tokenizer];
+
+  NSError *error;
+  SubImapResponse *response = [parser parseResponseData:testData error:&error];
+
+  STAssertNil(error, @"Unable to parse response. %@", error);
+  STAssertNotNil(response, @"Unable to parse response.");
+
+  id data = response.data;
+  STAssertNotNil(data, @"Incorrect data. %@", data);
+  STAssertTrue([data isKindOfClass:NSDictionary.class], @"Incorrect data class '%@'.", NSStringFromClass([data class]));
+  STAssertNil(data[@"message"], @"Incorrect data '%@'.", data[@"message"]);
+}
+
+- (void)testBadResponseWithMessage {
+  NSString *testString = @"#1635 BAD Could not parse command\r\n";
+  NSData *testData = [testString dataUsingEncoding:NSASCIIStringEncoding];
+
+  SubImapTokenizer *tokenizer = [SubImapTokenizer tokenizer];
+  SubImapParser *parser = [SubImapParser parserWithTokenizer:tokenizer];
+
+  NSError *error;
+  SubImapResponse *response = [parser parseResponseData:testData error:&error];
+
+  STAssertNil(error, @"Unable to parse response. %@", error);
+  STAssertNotNil(response, @"Unable to parse response.");
+
+  id data = response.data;
+  STAssertNotNil(data, @"Incorrect data. %@", data);
+  STAssertTrue([data isKindOfClass:NSDictionary.class], @"Incorrect data class '%@'.", NSStringFromClass([data class]));
+  STAssertTrue([data[@"message"] isEqualToString:@"Could not parse command"], @"Incorrect message '%@'.", data[@"message"]);
+}
+
 @end

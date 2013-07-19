@@ -75,7 +75,7 @@
 
 - (void)setErrorCode:(NSInteger)code message:(NSString *)message {
   NSError *error = [NSError errorWithDomain:@"SubImap.Command" code:code userInfo:@{
-    NSLocalizedDescriptionKey:message,
+    NSLocalizedDescriptionKey:message ?: @"",
   }];
 
   self.error = error;
