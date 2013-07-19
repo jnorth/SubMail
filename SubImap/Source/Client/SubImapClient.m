@@ -169,6 +169,13 @@
   _activeCommand = command;
   _connectionHasSpace = NO;
 
+  // Delegate: WillSendCommand
+  for (id<SubImapClientDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(client:willSendCommand:)]) {
+      [delegate client:self willSendCommand:command];
+    }
+  }
+
   for (SubImapConnectionData *data in [SubImapConnectionData compressDataList:[command render]]) {
     [_connection write:data];
   }
@@ -243,6 +250,13 @@
 }
 
 - (void)connection:(SubImapConnection *)connection didReceiveResponseData:(NSData *)data {
+  // Delegate: WillParseResponseData
+  for (id<SubImapClientDelegate>delegate in _delegates) {
+    if ([delegate respondsToSelector:@selector(client:parser:willParseResponseData:)]) {
+      [delegate client:self parser:_parser willParseResponseData:data];
+    }
+  }
+
   NSError *error;
   SubImapResponse *response = [_parser parseResponseData:data error:&error];
 
