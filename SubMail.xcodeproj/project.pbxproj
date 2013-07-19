@@ -14,6 +14,8 @@
 		0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */; };
 		0948D0A716C3E12B00C51B96 /* SubImapTransactionalClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0948D0A516C3E12B00C51B96 /* SubImapTransactionalClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0948D0A816C3E12B00C51B96 /* SubImapTransactionalClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A616C3E12B00C51B96 /* SubImapTransactionalClient.m */; };
+		095246EE1799879700AECA34 /* SubImapCloseCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 095246EC1799879700AECA34 /* SubImapCloseCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		095246EF1799879700AECA34 /* SubImapCloseCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 095246ED1799879700AECA34 /* SubImapCloseCommand.m */; };
 		0967DF5D178D718000532758 /* SubImapParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0967DF5C178D718000532758 /* SubImapParserTests.m */; };
 		09AA64FF16B9213500948DD5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0930CC3E16B7DFC100F54E3D /* SenTestingKit.framework */; };
 		09AA650016B9213500948DD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0930CC2816B7DFC000F54E3D /* Cocoa.framework */; };
@@ -85,6 +87,8 @@
 		0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapTransaction.m; sourceTree = "<group>"; };
 		0948D0A516C3E12B00C51B96 /* SubImapTransactionalClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapTransactionalClient.h; sourceTree = "<group>"; };
 		0948D0A616C3E12B00C51B96 /* SubImapTransactionalClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapTransactionalClient.m; sourceTree = "<group>"; };
+		095246EC1799879700AECA34 /* SubImapCloseCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapCloseCommand.h; sourceTree = "<group>"; };
+		095246ED1799879700AECA34 /* SubImapCloseCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapCloseCommand.m; sourceTree = "<group>"; };
 		0967DF5B178D718000532758 /* SubImapParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapParserTests.h; sourceTree = "<group>"; };
 		0967DF5C178D718000532758 /* SubImapParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapParserTests.m; sourceTree = "<group>"; };
 		09AA64E916B9213400948DD5 /* SubImap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SubImap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -290,6 +294,8 @@
 				09AA652916B9221E00948DD5 /* SubImapCommand.m */,
 				09AA652616B9221E00948DD5 /* SubImapCapabilityCommand.h */,
 				09AA652716B9221E00948DD5 /* SubImapCapabilityCommand.m */,
+				095246EC1799879700AECA34 /* SubImapCloseCommand.h */,
+				095246ED1799879700AECA34 /* SubImapCloseCommand.m */,
 				09AA652A16B9221E00948DD5 /* SubImapExpungeCommand.h */,
 				09AA652B16B9221E00948DD5 /* SubImapExpungeCommand.m */,
 				09AA652C16B9221E00948DD5 /* SubImapFetchCommand.h */,
@@ -377,6 +383,7 @@
 				09AA656016B9221E00948DD5 /* SubImapTypes.h in Headers */,
 				090C61E81796AFB900AAC344 /* SubImapConnectionDelegate.h in Headers */,
 				090C61E91796AFC200AAC344 /* SubImapClientDelegate.h in Headers */,
+				095246EE1799879700AECA34 /* SubImapCloseCommand.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +543,7 @@
 				09AA655F16B9221E00948DD5 /* SubImapTokenizer.m in Sources */,
 				0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */,
 				0948D0A816C3E12B00C51B96 /* SubImapTransactionalClient.m in Sources */,
+				095246EF1799879700AECA34 /* SubImapCloseCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

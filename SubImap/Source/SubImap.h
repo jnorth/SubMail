@@ -34,6 +34,7 @@
 
 #import "SubImapCommand.h"
 #import "SubImapCapabilityCommand.h"
+#import "SubImapCloseCommand.h"
 #import "SubImapExpungeCommand.h"
 #import "SubImapFetchCommand.h"
 #import "SubImapListCommand.h"
