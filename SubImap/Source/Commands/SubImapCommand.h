@@ -24,6 +24,10 @@
 #import "SubImapTypes.h"
 #import "SubImapResponse.h"
 
+
+extern NSString * const SubImapCommandErrorDomain;
+
+
 /*
  * SubImapCommand
  *

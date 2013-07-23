@@ -85,7 +85,7 @@
 
 - (BOOL)handleTaggedResponse:(SubImapResponse *)response {
   if (![response isType:SubImapResponseTypeOk]) {
-    [self setErrorCode:5 message:@"Unable to login to account."];
+    [self setErrorCode:SubImapLoginCommandBadCredentialsError message:@"Unable to login to account."];
   }
 
   self.result = response.data[@"message"];

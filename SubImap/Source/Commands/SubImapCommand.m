@@ -23,6 +23,10 @@
 
 #import "SubImapCommand.h"
 
+
+NSString * const SubImapCommandErrorDomain = @"SubImapCommandErrorDomain";
+
+
 @implementation SubImapCommand {
   NSMutableArray *_completionBlocks;
 }
@@ -74,8 +78,8 @@
 }
 
 - (void)setErrorCode:(NSInteger)code message:(NSString *)message {
-  NSError *error = [NSError errorWithDomain:@"SubImap.Command" code:code userInfo:@{
-    NSLocalizedDescriptionKey:message ?: @"",
+  NSError *error = [NSError errorWithDomain:SubImapCommandErrorDomain code:code userInfo:@{
+    NSLocalizedDescriptionKey: message ?: @"",
   }];
 
   self.error = error;

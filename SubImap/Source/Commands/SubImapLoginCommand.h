@@ -23,6 +23,12 @@
 
 #import "SubImapCommand.h"
 
+
+enum {
+  SubImapLoginCommandBadCredentialsError = 5,
+};
+
+
 @interface SubImapLoginCommand : SubImapCommand
 
 + (id)commandWithLogin:(NSString *)login password:(NSString *)password;
