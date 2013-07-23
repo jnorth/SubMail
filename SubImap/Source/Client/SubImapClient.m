@@ -223,7 +223,9 @@
   if ([_activeCommand handleResponse:response]) {
     if ([response isResult]) {
       // Update state
-      self.state = [_activeCommand stateFromState:self.state];
+      if (response.status) {
+        self.state = [_activeCommand stateFromState:self.state];
+      }
 
       // Process next command
       _activeCommand = nil;
