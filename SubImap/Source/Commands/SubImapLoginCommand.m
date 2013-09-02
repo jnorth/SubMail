@@ -63,7 +63,7 @@
     ? [SubImapConnectionData literalDataWithString:_login encoding:NSUTF8StringEncoding]
     : [SubImapConnectionData dataWithString:_login];
 
-  SubImapConnectionData *passwordData = [self stringNeedsLiteral:_login]
+  SubImapConnectionData *passwordData = [self stringNeedsLiteral:_password]
     ? [SubImapConnectionData literalDataWithString:_password encoding:NSUTF8StringEncoding]
     : [SubImapConnectionData dataWithString:_password];
 
@@ -104,14 +104,15 @@
 // Only 'astring's should be sent as non-literals
 - (BOOL)stringNeedsLiteral:(NSString *)string {
   // ASCII
-  NSMutableCharacterSet *validCharacters = [NSCharacterSet characterSetWithRange:NSMakeRange(0, 127)];
+  NSMutableCharacterSet *validCharacters = [NSMutableCharacterSet characterSetWithRange:NSMakeRange(0, 127)];
   // Remove control characters
   [validCharacters removeCharactersInRange:NSMakeRange(0, 31)];
   [validCharacters removeCharactersInRange:NSMakeRange(127, 1)];
   // Remove atom specials, except ]
-  [validCharacters removeCharactersInString:@"(){ %*\""];
+  [validCharacters removeCharactersInString:@"(){ %*\"\\"];
 
-  return [string rangeOfCharacterFromSet:[validCharacters invertedSet]].location != NSNotFound;
+  NSRange range = [string rangeOfCharacterFromSet:[validCharacters invertedSet]];
+  return (range.location != NSNotFound);
 }
 
 @end

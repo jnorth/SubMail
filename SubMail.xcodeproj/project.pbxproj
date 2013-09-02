@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		090C61E81796AFB900AAC344 /* SubImapConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 090C61E61796A30F00AAC344 /* SubImapConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		090C61E91796AFC200AAC344 /* SubImapClientDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 090C61E71796A83900AAC344 /* SubImapClientDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0928E79017D4E81400568577 /* SubImapLoginCommandTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0928E78F17D4E81400568577 /* SubImapLoginCommandTests.m */; };
 		0930CCB116B7E15900F54E3D /* SubMail.h in Headers */ = {isa = PBXBuildFile; fileRef = 0930CCAF16B7E15900F54E3D /* SubMail.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0948D0A316C3DEED00C51B96 /* SubImapTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 0948D0A116C3DEED00C51B96 /* SubImapTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0948D0A416C3DEED00C51B96 /* SubImapTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 0948D0A216C3DEED00C51B96 /* SubImapTransaction.m */; };
@@ -74,6 +75,8 @@
 		090C61E61796A30F00AAC344 /* SubImapConnectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubImapConnectionDelegate.h; sourceTree = "<group>"; };
 		090C61E71796A83900AAC344 /* SubImapClientDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubImapClientDelegate.h; sourceTree = "<group>"; };
 		091F9B0916B8354000BF3186 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		0928E78E17D4E81400568577 /* SubImapLoginCommandTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubImapLoginCommandTests.h; sourceTree = "<group>"; };
+		0928E78F17D4E81400568577 /* SubImapLoginCommandTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubImapLoginCommandTests.m; sourceTree = "<group>"; };
 		0930CC2516B7DFC000F54E3D /* SubMail.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SubMail.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0930CC2816B7DFC000F54E3D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0930CC2B16B7DFC000F54E3D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -342,6 +345,8 @@
 				09AA656516B9233600948DD5 /* SubImapTokenizerTests.m */,
 				0967DF5B178D718000532758 /* SubImapParserTests.h */,
 				0967DF5C178D718000532758 /* SubImapParserTests.m */,
+				0928E78E17D4E81400568577 /* SubImapLoginCommandTests.h */,
+				0928E78F17D4E81400568577 /* SubImapLoginCommandTests.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -553,6 +558,7 @@
 			files = (
 				09AA656716B9233600948DD5 /* SubImapTokenizerTests.m in Sources */,
 				0967DF5D178D718000532758 /* SubImapParserTests.m in Sources */,
+				0928E79017D4E81400568577 /* SubImapLoginCommandTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
