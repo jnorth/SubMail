@@ -37,6 +37,8 @@ extern NSString * const SubImapCommandErrorDomain;
  */
 @interface SubImapCommand : NSObject
 
+@property (readonly) BOOL isComplete;
+
 /*
  * IMAP commands are 'tagged' so that we can match responses to their command.
  *
@@ -63,6 +65,18 @@ extern NSString * const SubImapCommandErrorDomain;
  */
 - (void)addCompletionBlock:(SubImapCompletionBlock)block;
 
+/*
+ * Calls the completion handlers.
+ *
+ * This is automatically called when YES is returned from your Tagged
+ * response handler, or if an error is set before rendering.
+ */
+- (void)complete;
+
+/*
+ * Sets the error and calls complete.
+ */
+- (void)failWithErrorCode:(NSInteger)code message:(NSString *)message;
 
 #pragma mark - Override
 
@@ -132,17 +146,5 @@ extern NSString * const SubImapCommandErrorDomain;
  * You may still set the command's result if anything useful was extracted.
  */
 - (void)setErrorCode:(NSInteger)code message:(NSString *)message;
-
-/*
- * This should not be overridden.
- *
- * Calls the completion handlers.
- *
- * This is automatically called when YES is returned from your Tagged
- * response handler, or if an error is set before rendering.
- *
- * You should not have to call this.
- */
-- (void)complete;
 
 @end

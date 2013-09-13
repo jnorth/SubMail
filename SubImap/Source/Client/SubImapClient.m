@@ -108,6 +108,10 @@
     }
   }
 
+  if (_activeCommand && !_activeCommand.isComplete) {
+    [_activeCommand complete];
+  }
+
   _activeCommand = nil;
   [_commandQueue removeAllObjects];
   _commandNumber = 0;
@@ -159,12 +163,6 @@
   SubImapCommand *command = [self nextCommand];
   if (!command) return;
 
-  // Command had an error setting up
-  if (command.error) {
-    [command complete];
-    return;
-  }
-
   // Send command
   _activeCommand = command;
   _connectionHasSpace = NO;
@@ -200,6 +198,18 @@
 
   if (command) {
     [_commandQueue removeObject:command];
+
+    // Command is already complete for some reason
+    if (command.isComplete) {
+      command = [self nextCommand];
+    }
+
+    // There was an error setting up the command
+    else if (command.error) {
+      [command complete];
+      command = [self nextCommand];
+    }
+
     return command;
   }
 

@@ -39,6 +39,23 @@ NSString * const SubImapCommandErrorDomain = @"SubImapCommandErrorDomain";
   [_completionBlocks addObject:block];
 }
 
+- (void)complete {
+  [self willChangeValueForKey:@"isComplete"];
+  _isComplete = YES;
+  [self didChangeValueForKey:@"isComplete"];
+
+  for (SubImapCompletionBlock block in _completionBlocks) {
+    block(self);
+  }
+}
+
+- (void)failWithErrorCode:(NSInteger)code message:(NSString *)message {
+  [self setErrorCode:code message:message];
+  [self complete];
+}
+
+#pragma mark -
+
 - (NSString *)name {
   return nil;
 }
@@ -78,17 +95,9 @@ NSString * const SubImapCommandErrorDomain = @"SubImapCommandErrorDomain";
 }
 
 - (void)setErrorCode:(NSInteger)code message:(NSString *)message {
-  NSError *error = [NSError errorWithDomain:SubImapCommandErrorDomain code:code userInfo:@{
+  self.error = [NSError errorWithDomain:SubImapCommandErrorDomain code:code userInfo:@{
     NSLocalizedDescriptionKey: message ?: @"",
   }];
-
-  self.error = error;
-}
-
-- (void)complete {
-  for (SubImapCompletionBlock block in _completionBlocks) {
-    block(self);
-  }
 }
 
 @end
